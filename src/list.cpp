@@ -40,7 +40,7 @@ int ListDtor(list_t* list)
     list->head     = POISON;
     list->tail     = POISON;
     list->freeHead = POISON;
-    list->size     = POISON;
+    list->size     = 0;
     list->capacity = POISON;
 
     return LIST_IS_DESTRUCTED;
@@ -115,12 +115,21 @@ size_t ListPrev(list_t* list, size_t physIndex)
 
 size_t ListInsertAfter(list_t *list, size_t physIndex, elem_t value)
 {
+    if (physIndex == 0)
+    {
+        //printf("%s\n", value);
+        //printf("%lu\n", list->capacity);
+    }
+    
     if (physIndex > list->capacity          ||
        (list->data[physIndex].prev == FREEE &&         
        (list->size != 0 || physIndex != list->tail))) //if user want to insert after free node
     {
         return BAD_INSERT;
     }
+   
+    if (physIndex == 0)
+        printf("%s\n", value);
 
     node_t* dataptr = ListResize(list, UP);
     if (dataptr == NULL)

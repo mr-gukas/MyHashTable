@@ -6,15 +6,16 @@
 
 struct word_t 
 {
-    char*  word_start = NULL;///< a pointer on the begin of line
-    size_t word_len   = 0;///< length of line
+    char*  word_start = NULL;
+    size_t word_len   = 0;
 };
 
 struct text_t
 {
-    char *  buf   = NULL;///<text
-    size_t  nChar = 0;///<count of characters
-    word_t* words = NULL;///<fileLines array
+    char *  buf      = NULL;
+    size_t  nChar    = 0;
+    word_t* words    = NULL;
+    size_t  word_cnt = 0;
 };
 
 void textCtor(text_t* text, FILE* const source);

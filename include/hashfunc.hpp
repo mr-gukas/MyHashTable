@@ -2,7 +2,18 @@
 
 #include <string.h>
 
-int getHash   (const char* str, int func_num);
+enum HASH_FUNC
+{
+    CONST_HASH = 1,
+    FIRST_ASCII,
+    WORD_LEN, 
+    SUM_ASCII,
+    ROL_HASH,
+    ROR_HASH,
+    PJW_HASH
+};
+
+unsigned int        getHash   (const char* str, HASH_FUNC mode);
 static unsigned int constHash (const char* str);
 static unsigned int firstAscii(const char* str);
 static unsigned int wordLen   (const char* str);

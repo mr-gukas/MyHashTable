@@ -28,6 +28,8 @@ void matchWords(text_t* text)
 {
     size_t   word       = 0;
     size_t   word_start = 0;
+
+    text->word_cnt = 1;
     
     text->words = (word_t*) calloc((text->nChar / 4)  + 1, sizeof(word_t));
     
@@ -39,18 +41,20 @@ void matchWords(text_t* text)
 
         if (!check_symb && not_alnum == 0)
         {
+            text->word_cnt++;
+
             not_alnum = 1;
 
             (*(text->buf + index)= '\0');
 
             (text->words + word)->word_start = text->buf + word_start;
             (text->words + word)->word_len   = index - word_start;
-            word_start                       = index + 1;
             ++word;
         }
         else if (check_symb && not_alnum == 1)
         {
-            not_alnum = 0;
+            word_start = index;
+            not_alnum  = 0;
         }
 
         if (word_start > text->nChar)

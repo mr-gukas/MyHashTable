@@ -1,10 +1,10 @@
 #include "../include/hashfunc.hpp"
 
-int getHash(const char* str, int func_num)
+unsigned int getHash(const char* str, HASH_FUNC mode)
 {
     if (!str) return -1;
 
-    switch (func_num)
+    switch (mode)
     {
         case 1: return constHash (str);
         case 2: return firstAscii(str);
@@ -39,7 +39,7 @@ static unsigned int sumAscii(const char* str)
 
     while (*(str + index))
     {
-        ascii_sum += (int) *((str + index++));
+        ascii_sum += *((str + index++));
     }
 
     return ascii_sum;
@@ -62,7 +62,7 @@ static unsigned int rolHash(const char* str)
 
     while (*(str + index))
     {
-        hash = my_rol(hash, 1) ^ str[index];
+        hash = my_rol(hash, 1) ^ str[index++];
     }
 
     return hash;
@@ -75,7 +75,7 @@ static unsigned int rorHash(const char* str)
 
     while (*(str + index))
     {
-        hash = my_ror(hash, 1) ^ str[index];
+        hash = my_ror(hash, 1) ^ str[index++];
     }
 
     return hash;
