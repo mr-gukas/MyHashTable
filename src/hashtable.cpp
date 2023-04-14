@@ -39,10 +39,10 @@ int hashtableStat(hashtable_t* hashtable)
 {
     if (!(hashtable && hashtable->lists)) return 1;
     
-    fprintf(hashtable->output, "\nНомер списка\tКоличество элементов\n");
-
     for (size_t index = 0; index < table_size; index++)
         fprintf(hashtable->output, "%lu\t%lu\n", index, hashtable->lists[index].size);
+
+    fprintf(hashtable->output, "\n");
 
     return 0;
 }
