@@ -7,7 +7,6 @@
 struct word_t 
 {
     char*  word_start = NULL;
-    size_t word_len   = 0;
 };
 
 struct text_t

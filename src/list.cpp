@@ -41,7 +41,7 @@ int ListDtor(list_t* list)
     list->tail     = POISON;
     list->freeHead = POISON;
     list->size     = 0;
-    list->capacity = POISON;
+    list->capacity = 0;
 
     return LIST_IS_DESTRUCTED;
 }
@@ -50,8 +50,7 @@ int ListIsDestructed(list_t* list)
 {
     if (list == NULL) return LIST_NULL_PTR;
     
-    if (list->head == POISON && list->tail     == POISON && list->freeHead == POISON &&
-        list->size == POISON && list->capacity == POISON)
+    if (list->head == POISON && list->tail == POISON && list->freeHead == POISON)
         return LIST_IS_DESTRUCTED;
     
     return LIST_UB;

@@ -1,5 +1,6 @@
 #include "../include/hashfunc.hpp"
 
+
 unsigned int getHash(const char* str, HASH_FUNC mode)
 {
     if (!str) return -1;
