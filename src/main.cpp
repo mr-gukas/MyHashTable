@@ -22,14 +22,14 @@ int main(int argc, char* argv[])
          
     hashtable_t hashtable = {};
     hashtableCtor(&hashtable, text.words, text.word_cnt);
-
+  
     for (int hash_mode = 1; hash_mode <= 7; hash_mode++)
     {
         hashtableFill (&hashtable, (HASH_FUNC) hash_mode);    
         hashtableStat (&hashtable);
         hashtableReset(&hashtable);
     }
-    
+ 
     hashtableDtor(&hashtable);
     textDtor     (&text);
     fclose       (source_txt);

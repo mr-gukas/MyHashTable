@@ -1,6 +1,8 @@
 #include "../include/hashfunc.hpp"
 
 
+//extern "C" unsigned int new_rolHash(const char* str);
+
 unsigned int getHash(const char* str, HASH_FUNC mode)
 {
     if (!str) return -1;
@@ -56,7 +58,7 @@ static unsigned int my_rol(int num, int shift)
     return (num << shift) | (num >> (32 - shift));
 }
 
-static unsigned int rolHash(const char* str)
+unsigned int rolHash(const char* str)
 {
     unsigned int hash  = 0;
     size_t       index = 0;

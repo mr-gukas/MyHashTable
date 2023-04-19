@@ -14,16 +14,13 @@ int main(void)
     text_t tests = {};
     textCtor(&tests, tests_txt);
 
-    tests.word_cnt--;
+    //tests.word_cnt--;
          
     hashtable_t hashtable = {};
     hashtableCtor(&hashtable, tests.words, tests.word_cnt);
 
     clock_t start, end = {};
-
-    hashtableFill(&hashtable, ROL_HASH);
-    hashtableReset(&hashtable);
-    
+   
     hashtable.isProcessed = 1;
     hashtableFill(&hashtable, ROL_HASH);
 

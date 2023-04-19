@@ -3,21 +3,24 @@
 #include <immintrin.h>
 #include <stdint.h>
 
+extern "C" unsigned int rolHash_asm(const char* str);
+
 int hashtableFill(hashtable_t *hashtable, HASH_FUNC mode) {
   if (!hashtable)
     return 1;
 
   hashtable->isReset = 0;
 
-  for (size_t index = 0; index < hashtable->word_cnt; index++) {
-    unsigned int hash =
-        getHash(hashtable->words[index].word_start, mode) % table_size;
-
+  for (size_t index = 0; index < hashtable->word_cnt - 1; index++) 
+  {
+    unsigned int hash = rolHash_asm(hashtable->words[index].word_start) % table_size;
     if (hashtable->lists[hash].size == 0)
       ListCtor(&(hashtable->lists[hash]), list_size);
 
     if (findinTable(hashtable, hashtable->words[index].word_start, hash) == 0) {
+
       if (hashtable->isProcessed == 0) {
+        printf("heheheh\n");
         fprintf(hashtable->words_list, "%-31s",
                 hashtable->words[index].word_start);
         fprintf(hashtable->words_list, "\n");
@@ -35,7 +38,7 @@ int hashtableFill(hashtable_t *hashtable, HASH_FUNC mode) {
 }
 
 
-inline int findinTable(hashtable_t *hashtable, const char *word, unsigned int hash) 
+int findinTable(hashtable_t *hashtable, const char *word, unsigned int hash) 
 {
   if (!(hashtable && word))
     return -1;
@@ -50,7 +53,8 @@ inline int findinTable(hashtable_t *hashtable, const char *word, unsigned int ha
   return 0;
 }
 
-inline int avx2_findinTable(hashtable_t *hashtable, const char *word, unsigned int hash)
+/*
+int avx2_findinTable(hashtable_t *hashtable, const char *word, unsigned int hash)
 {
   if (!(hashtable && word))
     return -1;
@@ -64,6 +68,9 @@ inline int avx2_findinTable(hashtable_t *hashtable, const char *word, unsigned i
  
   return 0;
 }
+*/
+
+
 int hashtableStat(hashtable_t *hashtable) {
   if (!(hashtable && hashtable->lists))
     return 1;
@@ -102,7 +109,7 @@ int hashtableCtor(hashtable_t *hashtable, word_t *words, size_t word_cnt) {
     return 1;
 
   hashtable->output = fopen("../data/output.csv", "w");
-  hashtable->words_list = fopen("../data/wordlist.txt", "w+");
+  //hashtable->words_list = fopen("../data/wordlist.txt", "w+");
 
   return 0;
 }
@@ -117,7 +124,7 @@ int hashtableDtor(hashtable_t *hashtable) {
   free(hashtable->lists);
 
   fclose(hashtable->output);
-  fclose(hashtable->words_list);
+  //fclose(hashtable->words_list);
 
   return 0;
 }
@@ -129,14 +136,15 @@ int hashtableFinder(hashtable_t *hashtable, text_t *tests, HASH_FUNC mode) {
   size_t index = 0;
   
   while (tests->words[index].word_start) {
-    unsigned int hash =
-        getHash(tests->words[index].word_start, mode) % table_size;
-        avx2_findinTable(hashtable, tests->words[index++].word_start, hash);
+    unsigned int hash = rolHash_asm(tests->words[index].word_start) % table_size;
+    
+    findinTable(hashtable, tests->words[index++].word_start, hash);
   }
 
   return 0;
 }
 
+/*
 int avx2_strcmp(const char* str1, const char* str2) {
 
     __m256i a = _mm256_load_si256((__m256i*)str1);
@@ -151,3 +159,4 @@ int avx2_strcmp(const char* str1, const char* str2) {
         return (unsigned char)str1[offset] - (unsigned char)str2[offset];
     }
 }
+*/
