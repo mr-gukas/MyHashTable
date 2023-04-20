@@ -29,7 +29,8 @@ int hashtableFill  (hashtable_t* hashtable, HASH_FUNC mode);
 int hashtableStat  (hashtable_t* hashtable);
 int hashtableReset (hashtable_t* hashtable);
 int findinTable    (hashtable_t* hashtable, const char* word, unsigned int hash);
-//int avx2_findinTable(hashtable_t *hashtable, const char *word, unsigned int hash);
 int hashtableFinder(hashtable_t* hashtable, text_t* tests,  HASH_FUNC mode);
-//int avx2_strcmp    (const char* str1, const char* str2); 
+int avx2_strcmp    (const char* str1, const char* str2); 
+int asm_strcmp(const char* str1, const char* str2);
+unsigned int avx_crc32(const char* str);
 

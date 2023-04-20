@@ -20,7 +20,7 @@ set(INCLUDE_FILES
     include/textutils.hpp
 )
 
-add_compile_options(-O3)
+add_compile_options(-O3 -mavx2)
 
 add_executable(optimize  src/opt.cpp  ${SRC_FILES} ${INCLUDE_FILES})
 add_executable(hashtable src/main.cpp  ${SRC_FILES} ${INCLUDE_FILES})

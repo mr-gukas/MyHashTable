@@ -14,8 +14,6 @@ int main(void)
     text_t tests = {};
     textCtor(&tests, tests_txt);
 
-    //tests.word_cnt--;
-         
     hashtable_t hashtable = {};
     hashtableCtor(&hashtable, tests.words, tests.word_cnt);
 

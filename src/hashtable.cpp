@@ -13,14 +13,13 @@ int hashtableFill(hashtable_t *hashtable, HASH_FUNC mode) {
 
   for (size_t index = 0; index < hashtable->word_cnt - 1; index++) 
   {
-    unsigned int hash = rolHash_asm(hashtable->words[index].word_start) % table_size;
+    unsigned int hash = avx_crc32(hashtable->words[index].word_start) % table_size;
     if (hashtable->lists[hash].size == 0)
       ListCtor(&(hashtable->lists[hash]), list_size);
 
     if (findinTable(hashtable, hashtable->words[index].word_start, hash) == 0) {
 
       if (hashtable->isProcessed == 0) {
-        printf("heheheh\n");
         fprintf(hashtable->words_list, "%-31s",
                 hashtable->words[index].word_start);
         fprintf(hashtable->words_list, "\n");
@@ -46,30 +45,12 @@ int findinTable(hashtable_t *hashtable, const char *word, unsigned int hash)
   for (size_t index = 0; index <= hashtable->lists[hash].size; index++)
   {
     if (hashtable->lists[hash].data[index].value && 
-        strcmp(word, hashtable->lists[hash].data[index].value) == 0)
+        avx2_strcmp(word, hashtable->lists[hash].data[index].value) == 0)
         return 1;
   }
   
   return 0;
 }
-
-/*
-int avx2_findinTable(hashtable_t *hashtable, const char *word, unsigned int hash)
-{
-  if (!(hashtable && word))
-    return -1;
-
-  for (size_t index = 0; index <= hashtable->lists[hash].size; index++)
-  {
-    if (hashtable->lists[hash].data[index].value && 
-        avx2_strcmp(word, hashtable->lists[hash].data[index].value) == 0)
-        return 1;
-  }
- 
-  return 0;
-}
-*/
-
 
 int hashtableStat(hashtable_t *hashtable) {
   if (!(hashtable && hashtable->lists))
@@ -136,20 +117,54 @@ int hashtableFinder(hashtable_t *hashtable, text_t *tests, HASH_FUNC mode) {
   size_t index = 0;
   
   while (tests->words[index].word_start) {
-    unsigned int hash = rolHash_asm(tests->words[index].word_start) % table_size;
-    
+    unsigned int hash = avx_crc32(tests->words[index].word_start) % table_size;
     findinTable(hashtable, tests->words[index++].word_start, hash);
   }
 
   return 0;
 }
 
-/*
-int avx2_strcmp(const char* str1, const char* str2) {
+int asm_strcmp(const char* str1, const char* str2) 
+{
+    int res = 0;
+    asm (
+        ".intel_syntax noprefix;"
+        "1: "
+        "lodsb;"
+        "scasb;"
+        "jne 2f;"
+        "test al, al;"
+        "jne 1b;"
+        "xor eax, eax;"
+        "jmp 3f;"
+        "2: "
+        "dec edi;"
+        "sbb eax, eax;"
+        "3: "
+        ".att_syntax" 
+        : "=a" (res)
+        : "S" (str1), "D" (str2)
+        : "memory"
+    );
+    return res;
+}
 
+unsigned int avx_crc32(const char* str)
+{
+    __m256i data = _mm256_load_si256((__m256i*)str);
+    unsigned int hash = _mm_crc32_u32(0, _mm256_extract_epi32(data, 0));
+    hash = _mm_crc32_u32(hash, _mm256_extract_epi32(data, 1));
+    hash = _mm_crc32_u32(hash, _mm256_extract_epi32(data, 2));
+    hash = _mm_crc32_u32(hash, _mm256_extract_epi32(data, 3));
+    return hash;
+}
+
+int avx2_strcmp(const char* str1, const char* str2)
+{
     __m256i a = _mm256_load_si256((__m256i*)str1);
     __m256i b = _mm256_load_si256((__m256i*)str2);
     __m256i cmp = _mm256_cmpeq_epi8(a, b);
+
 
     int mask = _mm256_movemask_epi8(cmp);
     if (mask == 0xffffffff) {
@@ -159,4 +174,4 @@ int avx2_strcmp(const char* str1, const char* str2) {
         return (unsigned char)str1[offset] - (unsigned char)str2[offset];
     }
 }
-*/
+

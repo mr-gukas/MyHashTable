@@ -4,7 +4,7 @@ import statistics
 
 command = "./optimize"
 
-num_runs = 100
+num_runs = 1000
 
 execution_times = []
 
