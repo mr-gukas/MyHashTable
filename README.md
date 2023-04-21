@@ -411,10 +411,10 @@ int avx2_strcmp(const char* str1, const char* str2)
 unsigned int avx_crc32(const char* str)
 {
     __m256i data = _mm256_load_si256((__m256i*)str);
-    unsigned int hash = _mm_crc32_u32(0, _mm256_extract_epi32(data, 0));
-    hash = _mm_crc32_u32(hash, _mm256_extract_epi32(data, 1));
-    hash = _mm_crc32_u32(hash, _mm256_extract_epi32(data, 2));
-    hash = _mm_crc32_u32(hash, _mm256_extract_epi32(data, 3));
+    unsigned int hash = _mm_crc32_u32(0, _mm256_extract_epi64(data, 0));
+    hash = _mm_crc32_u32(hash, _mm256_extract_epi64(data, 1));
+    hash = _mm_crc32_u32(hash, _mm256_extract_epi64(data, 2));
+    hash = _mm_crc32_u32(hash, _mm256_extract_epi64(data, 3));
     return hash;
 }
 ```
