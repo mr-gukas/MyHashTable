@@ -10,16 +10,19 @@ int hashtableFill(hashtable_t *hashtable, HASH_FUNC mode) {
     return 1;
 
   hashtable->isReset = 0;
-
+  
   for (size_t index = 0; index < hashtable->word_cnt - 1; index++) 
   {
+
     unsigned int hash = avx_crc32(hashtable->words[index].word_start) % table_size;
+
     if (hashtable->lists[hash].size == 0)
       ListCtor(&(hashtable->lists[hash]), list_size);
 
-    if (findinTable(hashtable, hashtable->words[index].word_start, hash) == 0) {
-
-      if (hashtable->isProcessed == 0) {
+    if (findinTable(hashtable, hashtable->words[index].word_start, hash) == 0)
+    {
+      if (hashtable->isProcessed == 0) 
+      {
         fprintf(hashtable->words_list, "%-31s",
                 hashtable->words[index].word_start);
         fprintf(hashtable->words_list, "\n");
