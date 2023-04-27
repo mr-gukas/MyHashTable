@@ -3,7 +3,7 @@
 void textCtor(text_t * text, FILE* const source)
 {
     readInBuf(text, source);
-    matchWords(text);
+    loadWords(text);
 }
 
 void readInBuf(text_t* text, FILE* source)
@@ -24,7 +24,7 @@ size_t fileSize(FILE* file)
     return pos;
 }
 
-void matchWords(text_t* text)
+void loadWords(text_t* text)
 {
     size_t   word       = 0;
     size_t   word_start = 0;

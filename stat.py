@@ -4,7 +4,7 @@ import statistics
 
 command = "./optimize"
 
-num_runs = 1000
+num_runs = 100
 
 execution_times = []
 
@@ -16,7 +16,11 @@ for i in range(num_runs):
 avg_time = statistics.mean(execution_times)
 variance = statistics.variance(execution_times)
 std_dev  = statistics.stdev(execution_times)
+min_time = min(execution_times)
+max_time = max(execution_times)
 
 print("Математическое ожидание: {:.6f}".format(avg_time))
+print("Мин значение {:.6f}".format(min_time))
+print("Макс значение {:.6f}".format(max_time))
 print("Погрешность: {:.6f}%".format(std_dev / avg_time * 100))
 
