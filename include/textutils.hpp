@@ -21,5 +21,5 @@ void textCtor(text_t* text, FILE* const source);
 size_t fileSize(FILE* const file);
 void countInText(char* buf, char search, size_t* count);
 void readInBuf(text_t* text, FILE* source);
-void matchWords(text_t* text);
+void loadWords(text_t* text);
 void textDtor(text_t* text); 

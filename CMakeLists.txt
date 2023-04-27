@@ -27,7 +27,7 @@ add_executable(hashtable src/main.cpp  ${SRC_FILES} ${INCLUDE_FILES})
 target_include_directories(optimize PRIVATE include)
 target_include_directories(hashtable PRIVATE include)
 target_link_libraries(optimize PRIVATE -no-pie)  # добавляем флаг линковщику
-
+target_link_libraries(hashtable PRIVATE -no-pie)  # добавляем флаг линковщику
 
 
 

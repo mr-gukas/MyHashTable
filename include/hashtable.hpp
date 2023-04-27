@@ -4,8 +4,9 @@
 #include "../include/hashfunc.hpp"
 #include "../include/list.hpp"
 #include <string.h>
-
-extern "C" unsigned int rolHash_asm(const char* str);
+#include <cstdint> 
+#include <immintrin.h>
+#include <stdint.h>
 
 const size_t table_size = 1000;
 const size_t list_size  = 12;
@@ -13,24 +14,30 @@ const size_t list_size  = 12;
 struct hashtable_t 
 {
     word_t* words;
-    size_t  word_cnt;
-    size_t  non_repeating;
     list_t* lists;     
-    FILE*   output;
-    FILE*   words_list;
-
+    hash_t  hashfunc;
+    
     int     isReset;
-    int     isProcessed;
 };
 
-int hashtableCtor  (hashtable_t* hashtable, word_t* words, size_t word_cnt);
-int hashtableDtor  (hashtable_t* hashtable);
-int hashtableFill  (hashtable_t* hashtable, HASH_FUNC mode);
-int hashtableStat  (hashtable_t* hashtable);
+struct hashtable_state_t
+{
+    size_t word_cnt;
+    FILE*  output;
+    FILE*  words_list;
+    int    isReset;
+    int    isProcessed;
+};
+
+int hashtableCtor  (hashtable_t* hashtable, text_t* data, hashtable_state_t* state);
+int hashtableDtor  (hashtable_t* hashtable, hashtable_state_t* state);
+int hashtableFill  (hashtable_t* hashtable, hashtable_state_t* state);
+int hashtableStat  (hashtable_t* hashtable, hashtable_state_t* state);
 int hashtableReset (hashtable_t* hashtable);
-int findinTable    (hashtable_t* hashtable, const char* word, unsigned int hash);
-int hashtableFinder(hashtable_t* hashtable, text_t* tests,  HASH_FUNC mode);
-int avx2_strcmp    (const char* str1, const char* str2); 
+int findinTable    (hashtable_t* hashtable, const char* word);
+inline int findinList     (list_t*      list,      const char* word);
+int hashtableFinder(hashtable_t* hashtable, text_t* tests);
+int avx2_strcmp(const char* str1, const char* str2); 
 int asm_strcmp(const char* str1, const char* str2);
-unsigned int avx_crc32(const char* str);
+inline unsigned int avx_crc32(const char* str);
 

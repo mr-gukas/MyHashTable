@@ -2,28 +2,39 @@
 #include <time.h>
 
 
-int main(void)
-{
-    FILE* tests_txt = {};
-    if ((tests_txt = fopen("../data/wordlist.txt", "r")) == nullptr)
-    {
+int main(void) {
+    FILE* data_txt = {};
+
+    if ((data_txt = fopen("../data/all_words.txt", "r")) == nullptr) {
         fprintf(stderr, "incorrect data input\n");
         return 1;
     }
 	
-    text_t tests = {};
-    textCtor(&tests, tests_txt);
+    text_t data = {};
+    textCtor(&data, data_txt);
 
-    hashtable_t hashtable = {};
-    hashtableCtor(&hashtable, tests.words, tests.word_cnt);
+    hashtable_t       hashtable = {};
+    hashtable_state_t state     = {};
+
+    hashtableCtor(&hashtable, &data, &state);
 
     clock_t start, end = {};
    
     hashtable.isProcessed = 1;
-    hashtableFill(&hashtable, ROL_HASH);
+    hashtableFill(&hashtable);
+  
+    FILE* tests_txt = {};
+    
+    if ((tests_txt = fopen("../data/all_words.txt", "r")) == nullptr)
+    {
+        fprintf(stderr, "incorrect data input\n");
+        return 1;
+    }
+    text_t tests = {};
+    textCtor(&tests, tests_txt);
 
     start = clock();
-    hashtableFinder(&hashtable, &tests, ROL_HASH);
+    hashtableFinder(&hashtable, &tests);
     end   = clock();
 
     double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC; 
@@ -31,6 +42,7 @@ int main(void)
 
     hashtableDtor(&hashtable);
     textDtor     (&tests);
+    textDtor     (&data);
     fclose       (tests_txt);
   
 
